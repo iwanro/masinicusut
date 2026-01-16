@@ -65,12 +65,21 @@ try {
 
     // Add index on session_id for performance
     echo "<h2>4. Adding indexes...</h2>";
-    try {
-        $sql = "CREATE INDEX idx_session_id ON cart(session_id)";
-        $db->exec($sql);
-        echo "<p style='color: green;'>✓ Index on session_id created</p>";
-    } catch (Exception $e) {
-        echo "<p>Index on session_id already exists or error: " . $e->getMessage() . "</p>";
+    $indexExists = false;
+    $stmt = $db->query("SHOW INDEX FROM cart WHERE Key_name = 'idx_session_id'");
+    if ($stmt->rowCount() > 0) {
+        $indexExists = true;
+        echo "<p style='color: green;'>✓ Index on session_id already exists</p>";
+    }
+
+    if (!$indexExists) {
+        try {
+            $sql = "CREATE INDEX idx_session_id ON cart(session_id)";
+            $db->exec($sql);
+            echo "<p style='color: green;'>✓ Index on session_id created</p>";
+        } catch (Exception $e) {
+            echo "<p style='color: orange;'>⚠ Could not create index: " . $e->getMessage() . "</p>";
+        }
     }
 
     // Show final structure
