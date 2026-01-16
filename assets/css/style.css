@@ -825,6 +825,64 @@ button {
     pointer-events: none;
 }
 
+.brands-carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.brands-carousel {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 20px 0;
+    scrollbar-width: none; /* Hide scrollbar */
+    -ms-overflow-style: none;  /* Hide scrollbar IE/Edge */
+    flex: 1;
+}
+
+.brands-carousel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
+}
+
+/* Carousel Buttons */
+.carousel-btn {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+    border: none;
+    border-radius: 50%;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-base);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent-color) 100%);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+}
+
+.carousel-btn:active {
+    transform: scale(0.95);
+}
+
+.carousel-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .brands-scroll-container {
     position: relative;
     overflow-x: auto;
