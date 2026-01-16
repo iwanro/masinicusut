@@ -12,6 +12,58 @@ if (isLoggedIn()) {
 
 $pageTitle = 'Login';
 
+// Define styles before including header
+$additionalCss = '<style>
+.auth-page {
+    max-width: 480px;
+    margin: 80px auto;
+}
+
+.auth-card {
+    background: var(--bg-primary);
+    padding: 48px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-card h1 {
+    font-family: "Outfit", sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-light);
+}
+
+.auth-footer p {
+    color: var(--text-secondary);
+}
+
+.auth-footer a {
+    color: var(--accent-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+</style>';
+
+// Process form submission BEFORE including header
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -67,38 +119,4 @@ include SITE_ROOT . '/includes/header.php';
 
 <?php
 include SITE_ROOT . '/includes/footer.php';
-
-$additionalCss = '<style>
-.auth-page {
-    max-width: 480px;
-    margin: 80px auto;
-}
-
-.auth-card {
-    background: var(--bg-primary);
-    padding: 48px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
-}
-
-.auth-card h1 {
-    font-size: 1.75rem;
-    text-align: center;
-    margin-bottom: 12px;
-}
-
-.subtitle {
-    text-align: center;
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
-    margin-bottom: 32px;
-}
-
-.auth-footer {
-    text-align: center;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-light);
-}
-</style>';
+?>

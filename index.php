@@ -118,9 +118,11 @@ include SITE_ROOT . '/includes/header.php';
                             <p class="product-description"><?= e(truncate($product['description'], 80)) ?></p>
                         <?php endif; ?>
                         <div class="product-price"><?= formatPrice($product['price']) ?></div>
-                        <button onclick="addToCart(<?= intval($product['id']) ?>)" class="btn btn-primary" style="width: 100%">
-                            <i class="fas fa-shopping-cart"></i> Adaugă în Coș
-                        </button>
+                        <div class="product-actions">
+                            <button onclick="addToCart(<?= intval($product['id']) ?>)" class="btn btn-primary" style="width: 100%">
+                                <i class="fas fa-shopping-cart"></i> Adaugă în Coș
+                            </button>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>

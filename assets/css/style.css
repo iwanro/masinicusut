@@ -1175,6 +1175,9 @@ textarea.form-control {
 
 .product-info {
     padding: 24px;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
 }
 
 .product-title {
@@ -1207,6 +1210,11 @@ textarea.form-control {
     font-size: 0.9375rem;
     margin-bottom: 20px;
     line-height: 1.6;
+    flex-grow: 0;
+}
+
+.product-actions {
+    margin-top: auto;
 }
 
 /* =====================================================

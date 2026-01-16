@@ -12,6 +12,70 @@ if (isLoggedIn()) {
 
 $pageTitle = 'Înregistrare';
 
+// Define styles before including header
+$additionalCss = '<style>
+.auth-page {
+    max-width: 600px;
+    margin: 60px auto;
+}
+
+.auth-card {
+    background: var(--bg-primary);
+    padding: 48px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-card h1 {
+    font-family: "Outfit", sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-light);
+}
+
+.auth-footer p {
+    color: var(--text-secondary);
+}
+
+.auth-footer a {
+    color: var(--accent-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>';
+
+// Process form submission BEFORE including header
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCsrfToken($_POST[CSRF_TOKEN_NAME] ?? '')) {
         setFlash('error', 'Eroare de securitate. Încearcă din nou.');
@@ -55,10 +119,15 @@ include SITE_ROOT . '/includes/header.php';
     <div class="auth-page">
         <div class="auth-card">
             <h1>Înregistrare</h1>
-            <p class="subtitle">Creează-ți contul în câteva secunde</p>
+            <p class="subtitle">Creează-ți cont nou</p>
 
             <form method="POST">
                 <?= getCsrfField() ?>
+
+                <div class="form-group">
+                    <label for="name">Nume Complet *</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
 
                 <div class="form-group">
                     <label for="email">Email *</label>
@@ -66,25 +135,20 @@ include SITE_ROOT . '/includes/header.php';
                 </div>
 
                 <div class="form-group">
-                    <label for="name">Nume Complet *</label>
-                    <input type="text" id="name" name="name" class="form-control" required>
+                    <label for="phone">Telefon</label>
+                    <input type="tel" id="phone" name="phone" class="form-control">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="password">Parolă *</label>
-                        <input type="password" id="password" name="password" class="form-control" required minlength="<?= PASSWORD_MIN_LENGTH ?>">
+                        <input type="password" id="password" name="password" class="form-control" required>
                     </div>
 
                     <div class="form-group">
                         <label for="confirm_password">Confirmă Parola *</label>
                         <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Telefon</label>
-                    <input type="tel" id="phone" name="phone" class="form-control">
                 </div>
 
                 <div class="form-group">
@@ -99,18 +163,13 @@ include SITE_ROOT . '/includes/header.php';
                     </div>
 
                     <div class="form-group">
-                        <label for="county">Județ</label>
-                        <input type="text" id="county" name="county" class="form-control">
+                        <label for="postal_code">Cod Poștal</label>
+                        <input type="text" id="postal_code" name="postal_code" class="form-control">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="postal_code">Cod Poștal</label>
-                    <input type="text" id="postal_code" name="postal_code" class="form-control">
-                </div>
-
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 100%">
-                    Creează Cont
+                    Înregistrare
                 </button>
             </form>
 
@@ -123,38 +182,4 @@ include SITE_ROOT . '/includes/header.php';
 
 <?php
 include SITE_ROOT . '/includes/footer.php';
-
-$additionalCss = '<style>
-.auth-page {
-    max-width: 480px;
-    margin: 80px auto;
-}
-
-.auth-card {
-    background: var(--bg-primary);
-    padding: 48px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
-}
-
-.auth-card h1 {
-    font-size: 1.75rem;
-    text-align: center;
-    margin-bottom: 12px;
-}
-
-.subtitle {
-    text-align: center;
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
-    margin-bottom: 32px;
-}
-
-.auth-footer {
-    text-align: center;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-light);
-}
-</style>';
+?>
