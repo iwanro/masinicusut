@@ -4,6 +4,8 @@
  * SUNDARI TOP STAR S.R.L.
  */
 require_once '../config/config.php';
+require_once SITE_ROOT . '/includes/auth.php';
+require_once SITE_ROOT . '/includes/flash.php';
 
 // If already logged in, redirect to account
 if (isLoggedIn()) {
