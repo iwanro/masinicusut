@@ -346,6 +346,7 @@ $additionalCss = '<style>
     }
 }
 </style>';
+?>
 
 <script>
 // Brands Carousel Navigation

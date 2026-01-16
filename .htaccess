@@ -1,5 +1,8 @@
 RewriteEngine On
 
+# Favicon redirect (favicon.ico -> favicon.svg)
+RewriteRule ^favicon\.ico$ /assets/favicon.svg [L,R=302]
+
 # Sitemap
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
