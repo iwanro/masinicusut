@@ -4,8 +4,10 @@
  * SUNDARI TOP STAR S.R.L.
  */
 
-// Define SITE_ROOT
-define('SITE_ROOT', realpath(dirname(__FILE__) . '/..'));
+// Define SITE_ROOT (only if not already defined)
+if (!defined('SITE_ROOT')) {
+    define('SITE_ROOT', realpath(dirname(__FILE__) . '/..'));
+}
 
 // =====================================================
 // Database Configuration
@@ -87,6 +89,11 @@ define('ALLOWED_IMAGE_TYPES', ['image/jpeg', 'image/png', 'image/webp']);
 // Start Session
 // =====================================================
 if (session_status() === PHP_SESSION_NONE) {
+    // Set session save path to tmp (fix for cPanel hosting)
+    if (!is_dir('/opt/alt/php80/var/lib/php/session')) {
+        session_save_path('/tmp');
+    }
+
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
     ini_set('session.cookie_samesite', 'Lax'); // Allow same-site requests
