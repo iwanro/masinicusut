@@ -8,32 +8,95 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/logs/php_errors.log');
 
-require_once 'config/config.php';
+try {
+    require_once 'config/config.php';
 
-// Include SEO functions
-require_once SITE_ROOT . '/includes/seo.php';
+    // Include SEO functions
+    require_once SITE_ROOT . '/includes/seo.php';
 
-$pageType = 'home';
-$pageTitle = 'Acasă';
-$seoData = [];
-$seoParams = [];
+    $pageType = 'home';
+    $pageTitle = 'Acasă';
+    $seoData = [];
+    $seoParams = [];
 
-// Obține produsele featured
-$db = db();
-$stmt = $db->prepare("
-    SELECT id, name, slug, description, price, image
-    FROM products
-    WHERE is_featured = 1 AND is_active = 1
-    ORDER BY created_at DESC
-    LIMIT 8
-");
-$stmt->execute();
-$featuredProducts = $stmt->fetchAll();
+    // Obține produsele featured
+    $db = db();
+    $stmt = $db->prepare("
+        SELECT id, name, slug, description, price, image
+        FROM products
+        WHERE is_featured = 1 AND is_active = 1
+        ORDER BY created_at DESC
+        LIMIT 8
+    ");
+    $stmt->execute();
+    $featuredProducts = $stmt->fetchAll();
 
-// Obține mărcile pentru hero section
-$brands = getBrands();
+    // Obține mărcile pentru hero section
+    $brands = getBrands();
 
-include SITE_ROOT . '/includes/header.php';
+    include SITE_ROOT . '/includes/header.php';
+
+} catch (Exception $e) {
+    error_log("Index page error: " . $e->getMessage());
+    // Show user-friendly error page
+    die('<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eroare Temporară</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .error-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Eroare Temporară</h1>
+        <p>Ne cerem scuze, dar a apărut o problemă tehnică. Lucrăm la rezolvarea ei.</p>
+        <p>Vă rugăm să încercați să reîncărcați pagina sau să reveniți în câteva minute.</p>
+        <a href="/" class="btn">Reîncarcă Pagina</a>
+    </div>
+</body>
+</html>');
+}
 ?>
 
 <!-- Enhanced Hero Section -->

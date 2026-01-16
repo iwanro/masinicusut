@@ -4,8 +4,7 @@
  * SUNDARI TOP STAR S.R.L.
  * Premium Industrial Design
  */
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
