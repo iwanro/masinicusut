@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /pages/account.php
+Disallow: /pages/cart.php
+Disallow: /pages/checkout.php
+Disallow: /pages/login.php
+Disallow: /pages/register.php
+
+# Sitemap
+Sitemap: https://www.piesemasinicusut.ro/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

@@ -5,7 +5,13 @@
  */
 require_once '../config/config.php';
 
+// Include SEO functions
+require_once SITE_ROOT . '/includes/seo.php';
+
+$pageType = 'contact';
 $pageTitle = 'Contact';
+$seoData = [];
+$seoParams = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');

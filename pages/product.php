@@ -36,11 +36,44 @@ if (!$product) {
 
 $pageTitle = $product['name'];
 
+// Include SEO functions
+require_once SITE_ROOT . '/includes/seo.php';
+
+$pageType = 'product';
+$seoData = [
+    'name' => $product['name'],
+    'brand' => $product['brand_name'],
+    'description' => $product['description']
+];
+$seoParams = ['slug' => $slug];
+$ogImage = $product['image'];
+
 // Parse images JSON if exists
 $images = [];
 if (!empty($product['images'])) {
     $images = json_decode($product['images'], true) ?? [];
 }
+
+// Generate structured data
+require_once SITE_ROOT . '/includes/structured-data.php';
+$productSchema = getProductSchema($product);
+
+// Generate breadcrumb schema
+$breadcrumbs = [
+    ['name' => 'Acasă', 'url' => SITE_URL],
+    ['name' => 'Catalog', 'url' => SITE_URL . '/pages/catalog.php']
+];
+if ($product['brand_slug']) {
+    $breadcrumbs[] = [
+        'name' => $product['brand_name'],
+        'url' => SITE_URL . '/pages/catalog.php?brand=' . $product['brand_slug']
+    ];
+}
+$breadcrumbs[] = [
+    'name' => $product['name'],
+    'url' => SITE_URL . '/pages/product.php?slug=' . $slug
+];
+$breadcrumbSchema = getBreadcrumbSchema($breadcrumbs);
 
 include SITE_ROOT . '/includes/header.php';
 ?>

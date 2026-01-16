@@ -10,8 +10,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?= e(getSetting('site_description', 'Piese, accesorii și consumabile pentru mașini de cusut')) ?>">
-    <title><?= isset($pageTitle) ? e($pageTitle) . ' - ' : '' ?><?= e(getSetting('site_name', SITE_NAME)) ?></title>
+
+    <!-- Basic Meta Tags -->
+    <title><?= getMetaTitle($pageTitle ?? '', $pageType ?? 'home') ?></title>
+    <meta name="description" content="<?= getMetaDescription($pageType ?? 'home', $seoData ?? []) ?>">
+    <meta name="keywords" content="<?= getMetaKeywords($pageType ?? 'home', $seoData ?? []) ?>">
+    <meta name="author" content="<?= e(getSetting('site_name', SITE_NAME)) ?>">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="ro">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<?= getCanonicalUrl($pageType ?? 'home', $seoParams ?? []) ?>">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="<?= getOGType($pageType ?? 'home') ?>">
+    <meta property="og:url" content="<?= getCanonicalUrl($pageType ?? 'home', $seoParams ?? []) ?>">
+    <meta property="og:title" content="<?= getOGTitle(getMetaTitle($pageTitle ?? '', $pageType ?? 'home')) ?>">
+    <meta property="og:description" content="<?= getOGDescription(getMetaDescription($pageType ?? 'home', $seoData ?? [])) ?>">
+    <meta property="og:image" content="<?= getOGImage($ogImage ?? null) ?>">
+    <meta property="og:locale" content="ro_RO">
+    <meta property="og:site_name" content="<?= e(getSetting('site_name', SITE_NAME)) ?>">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="<?= getTwitterCard() ?>">
+    <meta name="twitter:url" content="<?= getCanonicalUrl($pageType ?? 'home', $seoParams ?? []) ?>">
+    <meta name="twitter:title" content="<?= getOGTitle(getMetaTitle($pageTitle ?? '', $pageType ?? 'home')) ?>">
+    <meta name="twitter:description" content="<?= getOGDescription(getMetaDescription($pageType ?? 'home', $seoData ?? [])) ?>">
+    <meta name="twitter:image" content="<?= getOGImage($ogImage ?? null) ?>">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?= URL_ASSETS ?>/favicon.ico">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -140,24 +168,7 @@
             <div class="container">
                 <div class="nav-wrapper">
                     <ul class="nav-menu">
-                        <li class="nav-item">
-                            <a href="/index.php" class="nav-link <?= isActivePage('index.php') ? 'active' : '' ?>">
-                                <i class="fas fa-home"></i>
-                                <span>Acasă</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/pages/catalog.php" class="nav-link <?= isActivePage('catalog.php') || isActivePage('product.php') ? 'active' : '' ?>">
-                                <i class="fas fa-th-large"></i>
-                                <span>Catalog Produse</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/pages/contact.php" class="nav-link <?= isActivePage('contact.php') ? 'active' : '' ?>">
-                                <i class="fas fa-envelope"></i>
-                                <span>Contact</span>
-                            </a>
-                        </li>
+                        <!-- Navigation links removed as requested -->
                     </ul>
 
                     <!-- Mobile Menu Toggle -->

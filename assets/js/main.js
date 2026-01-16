@@ -174,24 +174,44 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // =====================================================
-    // LAZY LOADING IMAGES
+    // ENHANCED LAZY LOADING
     // =====================================================
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
+
                     if (img.dataset.src) {
                         img.src = img.dataset.src;
                         img.removeAttribute('data-src');
-                        observer.unobserve(img);
                     }
+
+                    if (img.dataset.srcset) {
+                        img.srcset = img.dataset.srcset;
+                        img.removeAttribute('data-srcset');
+                    }
+
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
                 }
             });
+        }, {
+            rootMargin: '50px 0px',
+            threshold: 0.01
         });
 
         document.querySelectorAll('img[data-src]').forEach(img => {
             imageObserver.observe(img);
+        });
+
+        // Add lazy loading attribute as fallback
+        document.querySelectorAll('img:not([loading])').forEach(img => {
+            img.setAttribute('loading', 'lazy');
+        });
+    } else {
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            img.src = img.dataset.src;
         });
     }
 
@@ -229,45 +249,62 @@ function updateCartDisplay() {
  * @param {number} quantity
  */
 function addToCart(productId, quantity = 1) {
+    // Show loading state
+    const buttons = document.querySelectorAll(`button[onclick*="addToCart(${productId}"]`);
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se adaugă...';
+    });
+
     const formData = new FormData();
     formData.append('action', 'add');
     formData.append('product_id', productId);
     formData.append('quantity', quantity);
 
-    // Show loading state
-    const button = event?.target;
-    const originalText = button?.innerHTML;
-    if (button) {
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adaug...';
-    }
-
     fetch('/api/cart.php', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Update cart display
-            updateCartDisplay();
+    .then(response => {
+        // Log raw response
+        console.log('Cart API Response Status:', response.status);
 
-            // Show success notification
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Cart API Response Data:', data);
+
+        if (data.success) {
+            updateCartDisplay();
             showNotification('success', data.message || 'Produs adăugat în coș!');
         } else {
-            showNotification('error', data.message || 'Eroare la adăugare în coș.');
+            throw new Error(data.message || 'Eroare la adăugarea în coș');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showNotification('error', 'Eroare la comunicare cu serverul.');
+        console.error('Cart Error Details:', error);
+        showNotification('error', 'Eroare: ' + error.message);
+
+        // Log to server for debugging
+        fetch('/api/log_error.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                error: error.message,
+                productId: productId,
+                stack: error.stack
+            })
+        }).catch(err => console.error('Failed to log error:', err));
     })
     .finally(() => {
-        // Reset button state
-        if (button) {
-            button.disabled = false;
-            button.innerHTML = originalText;
-        }
+        // Reset buttons
+        buttons.forEach(btn => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Adaugă în Coș';
+        });
     });
 }
 

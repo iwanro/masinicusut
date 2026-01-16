@@ -5,6 +5,10 @@
  */
 require_once '../config/config.php';
 
+// Include SEO functions
+require_once SITE_ROOT . '/includes/seo.php';
+
+$pageType = 'catalog';
 $pageTitle = 'Catalog Produse';
 
 $db = db();
@@ -71,6 +75,16 @@ $products = $stmt->fetchAll();
 // Get filters
 $brands = getBrands();
 $types = getProductTypes();
+
+// SEO data
+$seoData = [
+    'brand' => $brandSlug,
+    'count' => $totalProducts ?? 0
+];
+$seoParams = array_filter([
+    'brand' => $_GET['brand'] ?? '',
+    'type' => $_GET['type'] ?? ''
+]);
 
 include SITE_ROOT . '/includes/header.php';
 ?>

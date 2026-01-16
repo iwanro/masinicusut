@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Sitemap
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]

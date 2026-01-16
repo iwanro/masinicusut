@@ -5,7 +5,13 @@
  */
 require_once 'config/config.php';
 
+// Include SEO functions
+require_once SITE_ROOT . '/includes/seo.php';
+
+$pageType = 'home';
 $pageTitle = 'Acasă';
+$seoData = [];
+$seoParams = [];
 
 // Obține produsele featured
 $db = db();
@@ -224,63 +230,8 @@ $additionalCss = '<style>
 }
 
 .brands-section,
-.featured-section,
-.features-section {
+.featured-section {
     padding: 60px 0;
-}
-
-.section-title {
-    text-align: center;
-    font-size: 32px;
-    margin-bottom: 40px;
-    color: var(--primary-color);
-}
-
-.brands-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-}
-
-.brand-card {
-    background-color: var(--bg-white);
-    padding: 20px;
-    text-align: center;
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    transition: var(--transition);
-}
-
-.brand-card:hover {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-}
-
-.feature-card {
-    text-align: center;
-    padding: 30px;
-}
-
-.feature-card i {
-    font-size: 48px;
-    color: var(--accent-color);
-    margin-bottom: 20px;
-}
-
-.feature-card h3 {
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-
-.text-center {
-    text-align: center;
 }
 
 @media (max-width: 768px) {

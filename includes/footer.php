@@ -74,6 +74,17 @@
         </div>
     </footer>
 
+    <!-- Structured Data -->
+    <?= getWebSiteSchema() ?>
+    <?= getOrganizationSchema() ?>
+    <?= getLocalBusinessSchema() ?>
+    <?php if (isset($productSchema)): ?>
+        <?= $productSchema ?>
+    <?php endif; ?>
+    <?php if (isset($breadcrumbSchema)): ?>
+        <?= $breadcrumbSchema ?>
+    <?php endif; ?>
+
     <!-- JavaScript -->
     <script src="<?= URL_JS ?>/main.js"></script>
     <?php if (isset($additionalJs)): ?>

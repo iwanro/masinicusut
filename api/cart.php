@@ -6,6 +6,16 @@
  */
 require_once '../config/config.php';
 
+// Enable error logging for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Don't display to browser
+ini_set('log_errors', 1);
+ini_set('error_log', SITE_ROOT . '/logs/cart_debug.log');
+
+// Log all cart actions
+$logMessage = date('Y-m-d H:i:s') . " - Action: $action, Session: " . session_id() . ", POST: " . print_r($_POST, true);
+error_log($logMessage);
+
 header('Content-Type: application/json');
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';

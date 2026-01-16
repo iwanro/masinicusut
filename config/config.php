@@ -73,7 +73,7 @@ define('ALLOWED_IMAGE_TYPES', ['image/jpeg', 'image/png', 'image/webp']);
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
-    ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.cookie_samesite', 'Lax'); // Allow same-site requests
     ini_set('session.cookie_secure', 1); // HTTPS-only cookies
     session_name(SESSION_NAME);
     session_start();
