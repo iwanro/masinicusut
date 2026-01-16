@@ -18,8 +18,10 @@ if (file_exists($envFile)) {
         if (strpos(trim($line), '#') === 0) {
             continue; // Skip comments
         }
-        list($name, $value) = explode('=', $line, 2);
-        $_ENV[trim($name)] = trim($value);
+        if (strpos($line, '=') !== false) {
+            list($name, $value) = explode('=', $line, 2);
+            $_ENV[trim($name)] = trim($value);
+        }
     }
 }
 
