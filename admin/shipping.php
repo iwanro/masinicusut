@@ -152,8 +152,8 @@ $rates = $stmt->fetchAll();
                                         ];
                                         foreach ($judete as $judet):
                                         ?>
-                                            <option value="<?= $judet ?>" <?= ($rate['county'] ?? '') === $judet ? 'selected' : '' ?>>
-                                                <?= $judet ?>
+                                            <option value="<?= e($judet) ?>" <?= ($rate['county'] ?? '') === $judet ? 'selected' : '' ?>>
+                                                <?= e($judet) ?>
                                             </option>
                                         <?php endforeach; ?>
                                         <option value="București" <?= ($rate['county'] ?? '') === 'București' ? 'selected' : '' ?>>
@@ -231,7 +231,7 @@ $rates = $stmt->fetchAll();
                                                 <td>
                                                     <a href="shipping.php?action=edit&id=<?= $r['id'] ?>"
                                                        class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                                                    <button onclick="deleteRate(<?= $r['id'] ?>)"
+                                                    <button onclick="deleteRate(<?= intval($r['id']) ?>)"
                                                             class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>

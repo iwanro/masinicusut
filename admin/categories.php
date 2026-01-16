@@ -229,7 +229,7 @@ $categories = $stmt->fetchAll();
                                                 <td>
                                                     <a href="categories.php?action=edit&id=<?= $cat['id'] ?>"
                                                        class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                                                    <button onclick="deleteCategory(<?= $cat['id'] ?>, <?= $cat['products_count'] ?>)"
+                                                    <button onclick="deleteCategory(<?= intval($cat['id']) ?>, <?= intval($cat['products_count']) ?>)"
                                                             class="btn btn-sm btn-danger" <?= $cat['products_count'] > 0 ? 'disabled' : '' ?>>
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -285,7 +285,7 @@ $categories = $stmt->fetchAll();
                                                 <td>
                                                     <a href="categories.php?action=edit&id=<?= $cat['id'] ?>"
                                                        class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                                                    <button onclick="deleteCategory(<?= $cat['id'] ?>, <?= $cat['products_count'] ?>)"
+                                                    <button onclick="deleteCategory(<?= intval($cat['id']) ?>, <?= intval($cat['products_count']) ?>)"
                                                             class="btn btn-sm btn-danger" <?= $cat['products_count'] > 0 ? 'disabled' : '' ?>>
                                                         <i class="fas fa-trash"></i>
                                                     </button>

@@ -13,7 +13,7 @@ $db = db();
 
 // Get or create session ID
 $sessionId = session_id();
-$userId = isLoggedIn() ? getCurrentUserId() : null;
+$userId = isLoggedIn() ? intval(getCurrentUserId()) : null;
 
 /**
  * Get cart count

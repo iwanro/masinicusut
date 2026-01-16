@@ -83,9 +83,9 @@ $sql = "SELECT *,
         FROM users
         WHERE $whereClause
         ORDER BY created_at DESC
-        LIMIT " . ADMIN_ITEMS_PER_PAGE . " OFFSET $offset";
+        LIMIT ? OFFSET ?";
 $stmt = $db->prepare($sql);
-$stmt->execute($params);
+$stmt->execute(array_merge($params, [ADMIN_ITEMS_PER_PAGE, $offset]));
 $users = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>

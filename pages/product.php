@@ -99,8 +99,8 @@ include SITE_ROOT . '/includes/header.php';
                 <small><?= getSetting('currency', 'RON') ?></small>
             </div>
 
-            <?php if ($product['short_description']): ?>
-                <p class="short-description"><?= e($product['short_description']) ?></p>
+            <?php if ($product['description']): ?>
+                <p class="short-description"><?= e(truncate($product['description'], 150)) ?></p>
             <?php endif; ?>
 
             <!-- Stock status -->
@@ -131,7 +131,7 @@ include SITE_ROOT . '/includes/header.php';
                                style="width: 80px">
                     </div>
                     <button type="button"
-                            onclick="addToCartWithQuantity(<?= $product['id'] ?>)"
+                            onclick="addToCartWithQuantity(<?= intval($product['id']) ?>)"
                             class="btn btn-primary btn-lg">
                         <i class="fas fa-shopping-cart"></i> Adaugă în Coș
                     </button>

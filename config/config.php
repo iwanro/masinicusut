@@ -11,17 +11,17 @@ define('SITE_ROOT', realpath(dirname(__FILE__) . '/..'));
 // Database Configuration
 // =====================================================
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'piese_masini_cusut');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'fovyarnx_cusut');
+define('DB_USER', 'fovyarnx_usercusut');
+define('DB_PASS', 'SiteSundari22!');
 define('DB_CHARSET', 'utf8mb4');
 
 // =====================================================
 // Site Configuration
 // =====================================================
 define('SITE_NAME', 'SUNDARI TOP STAR');
-define('SITE_URL', 'http://localhost');
-define('ADMIN_EMAIL', 'admin@sundari.ro');
+define('SITE_URL', 'https://www.piesemasinicusut.ro/');
+define('ADMIN_EMAIL', 'ffffdv@gmail.com');
 
 // =====================================================
 // Paths
@@ -53,7 +53,7 @@ define('SESSION_LIFETIME', 86400); // 24 hours
 // Security
 // =====================================================
 define('CSRF_TOKEN_NAME', 'csrf_token');
-define('PASSWORD_MIN_LENGTH', 6);
+define('PASSWORD_MIN_LENGTH', 8); // Increased from 6 for better security
 
 // =====================================================
 // Pagination
@@ -74,6 +74,7 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
     ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.cookie_secure', 1); // HTTPS-only cookies
     session_name(SESSION_NAME);
     session_start();
 }
@@ -92,12 +93,15 @@ require_once PATH_INCLUDES . '/functions.php';
 require_once PATH_INCLUDES . '/auth.php';
 
 // =====================================================
-// Error Reporting (Development)
+// Error Reporting (Production)
 // =====================================================
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Disable error display in production
+ini_set('log_errors', 1);     // Log errors instead
+ini_set('error_log', SITE_ROOT . '/logs/php_errors.log'); // Log file location
 
 // =====================================================
 // Timezone
 // =====================================================
 date_default_timezone_set('Europe/Bucharest');
+

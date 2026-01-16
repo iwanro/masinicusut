@@ -10,7 +10,7 @@ $pageTitle = 'Acasă';
 // Obține produsele featured
 $db = db();
 $stmt = $db->prepare("
-    SELECT id, name, slug, short_description, price, image
+    SELECT id, name, slug, description, price, image
     FROM products
     WHERE is_featured = 1 AND is_active = 1
     ORDER BY created_at DESC
@@ -77,11 +77,11 @@ include SITE_ROOT . '/includes/header.php';
                                 <?= e($product['name']) ?>
                             </a>
                         </h3>
-                        <?php if ($product['short_description']): ?>
-                            <p class="product-description"><?= e(truncate($product['short_description'], 80)) ?></p>
+                        <?php if ($product['description']): ?>
+                            <p class="product-description"><?= e(truncate($product['description'], 80)) ?></p>
                         <?php endif; ?>
                         <div class="product-price"><?= formatPrice($product['price']) ?></div>
-                        <button onclick="addToCart(<?= $product['id'] ?>)" class="btn btn-primary" style="width: 100%">
+                        <button onclick="addToCart(<?= intval($product['id']) ?>)" class="btn btn-primary" style="width: 100%">
                             <i class="fas fa-shopping-cart"></i> Adaugă în Coș
                         </button>
                     </div>

@@ -55,17 +55,17 @@ $totalProducts = $stmt->fetchColumn();
 // Get products with pagination
 $offset = getOffset($page, PRODUCTS_PER_PAGE);
 $sql = "
-    SELECT p.id, p.name, p.slug, p.short_description, p.price, p.image, p.is_featured,
+    SELECT p.id, p.name, p.slug, p.description, p.price, p.image, p.is_featured,
            c.name as brand_name, c.slug as brand_slug
     FROM products p
     LEFT JOIN categories c ON p.category_id = c.id
     LEFT JOIN categories sc ON p.subcategory_id = sc.id
     WHERE $whereClause
     ORDER BY p.created_at DESC
-    LIMIT " . PRODUCTS_PER_PAGE . " OFFSET $offset
+    LIMIT ? OFFSET ?
 ";
 $stmt = $db->prepare($sql);
-$stmt->execute($params);
+$stmt->execute(array_merge($params, [PRODUCTS_PER_PAGE, $offset]));
 $products = $stmt->fetchAll();
 
 // Get filters
@@ -182,13 +182,13 @@ include SITE_ROOT . '/includes/header.php';
                                         <?= e($product['name']) ?>
                                     </a>
                                 </h3>
-                                <?php if ($product['short_description']): ?>
+                                <?php if ($product['description']): ?>
                                     <p class="product-description">
-                                        <?= e(truncate($product['short_description'], 80)) ?>
+                                        <?= e(truncate($product['description'], 80)) ?>
                                     </p>
                                 <?php endif; ?>
                                 <div class="product-price"><?= formatPrice($product['price']) ?></div>
-                                <button onclick="addToCart(<?= $product['id'] ?>)"
+                                <button onclick="addToCart(<?= intval($product['id']) ?>)"
                                         class="btn btn-primary"
                                         style="width: 100%">
                                     <i class="fas fa-shopping-cart"></i> Adaugă în Coș

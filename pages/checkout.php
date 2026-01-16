@@ -224,8 +224,8 @@ include SITE_ROOT . '/includes/header.php';
                             ];
                             foreach ($judete as $judet):
                             ?>
-                                <option value="<?= $judet ?>" <?= ($selectedCounty === $judet) ? 'selected' : '' ?>>
-                                    <?= $judet ?>
+                                <option value="<?= e($judet) ?>" <?= ($selectedCounty === $judet) ? 'selected' : '' ?>>
+                                    <?= e($judet) ?>
                                 </option>
                             <?php endforeach; ?>
                             <option value="București" <?= ($selectedCounty === 'București') ? 'selected' : '' ?>>
@@ -294,8 +294,8 @@ include SITE_ROOT . '/includes/header.php';
 function updateShippingCost() {
     const county = document.getElementById('shipping_county').value;
     const city = document.getElementById('shipping_city').value;
-    const subtotal = <?= $totalAmount ?>;
-    const freeShippingThreshold = <?= $freeShipping ?>;
+    const subtotal = <?= json_encode($totalAmount) ?>;
+    const freeShippingThreshold = <?= json_encode($freeShipping) ?>;
 
     if (!county) {
         return; // Don't update if no county selected

@@ -8,7 +8,7 @@ require_once '../config/config.php';
 $pageTitle = 'Coșul Meu';
 
 $db = db();
-$userId = isLoggedIn() ? getCurrentUserId() : null;
+$userId = isLoggedIn() ? intval(getCurrentUserId()) : null;
 $sessionId = session_id();
 
 // Get cart items
@@ -59,16 +59,16 @@ include SITE_ROOT . '/includes/header.php';
 
                         <div class="cart-item-actions">
                             <div class="quantity-controls">
-                                <button onclick="updateCartItem(<?= $item['cart_id'] ?>, <?= $item['quantity'] - 1 ?>)"
+                                <button onclick="updateCartItem(<?= intval($item['cart_id']) ?>, <?= $item['quantity'] - 1 ?>)"
                                         <?= $item['quantity'] <= 1 ? 'disabled' : '' ?>>-</button>
                                 <input type="number" value="<?= $item['quantity'] ?>" readonly>
-                                <button onclick="updateCartItem(<?= $item['cart_id'] ?>, <?= $item['quantity'] + 1 ?>)"
+                                <button onclick="updateCartItem(<?= intval($item['cart_id']) ?>, <?= $item['quantity'] + 1 ?>)"
                                         <?= $item['quantity'] >= $item['stock'] ? 'disabled' : '' ?>>+</button>
                             </div>
                             <div class="item-subtotal">
                                 <strong><?= formatPrice($item['price'] * $item['quantity']) ?></strong>
                             </div>
-                            <button onclick="removeFromCart(<?= $item['cart_id'] ?>)" class="btn-remove">
+                            <button onclick="removeFromCart(<?= intval($item['cart_id']) ?>)" class="btn-remove">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>

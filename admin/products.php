@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
     $slug = trim($_POST['slug'] ?? slugify($_POST['name'] ?? ''));
     $description = trim($_POST['description'] ?? '');
-    $shortDescription = trim($_POST['short_description'] ?? '');
     $price = floatval($_POST['price'] ?? 0);
     $stock = intval($_POST['stock'] ?? 0);
     $sku = trim($_POST['sku'] ?? '');
@@ -48,10 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($productId > 0) {
         // Update
-        $sql = "UPDATE products SET name = ?, slug = ?, description = ?, short_description = ?,
+        $sql = "UPDATE products SET name = ?, slug = ?, description = ?,
                 price = ?, stock = ?, sku = ?, category_id = ?, subcategory_id = ?,
                 is_active = ?, is_featured = ?";
-        $params = [$name, $slug, $description, $shortDescription, $price, $stock, $sku, $categoryId, $subcategoryId, $isActive, $isFeatured];
+        $params = [$name, $slug, $description, $price, $stock, $sku, $categoryId, $subcategoryId, $isActive, $isFeatured];
 
         if ($image) {
             $sql .= ", image = ?";
@@ -68,11 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Insert
         $stmt = $db->prepare("
-            INSERT INTO products (name, slug, description, short_description, price, stock, sku,
+            INSERT INTO products (name, slug, description, price, stock, sku,
                                  category_id, subcategory_id, image, is_active, is_featured)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$name, $slug, $description, $shortDescription, $price, $stock,
+        $stmt->execute([$name, $slug, $description, $price, $stock,
                        $sku, $categoryId, $subcategoryId, $image, $isActive, $isFeatured]);
 
         setFlash('success', 'Produs adăugat cu succes!');
@@ -120,9 +119,9 @@ $sql = "SELECT p.*, c.name as brand_name
         LEFT JOIN categories c ON p.category_id = c.id
         WHERE $whereClause
         ORDER BY p.created_at DESC
-        LIMIT " . ADMIN_ITEMS_PER_PAGE . " OFFSET $offset";
+        LIMIT ? OFFSET ?";
 $stmt = $db->prepare($sql);
-$stmt->execute($params);
+$stmt->execute(array_merge($params, [ADMIN_ITEMS_PER_PAGE, $offset]));
 $products = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -192,13 +191,13 @@ $products = $stmt->fetchAll();
                                 <div class="form-group">
                                     <label for="price">Preț (RON) *</label>
                                     <input type="number" id="price" name="price" class="form-control"
-                                           value="<?= $product['price'] ?? '' ?>" step="0.01" min="0" required>
+                                           value="<?= e($product['price'] ?? '') ?>" step="0.01" min="0" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="stock">Stoc *</label>
                                     <input type="number" id="stock" name="stock" class="form-control"
-                                           value="<?= $product['stock'] ?? '' ?>" min="0" required>
+                                           value="<?= e($product['stock'] ?? '') ?>" min="0" required>
                                 </div>
                             </div>
 
@@ -214,7 +213,7 @@ $products = $stmt->fetchAll();
                                     <select id="category_id" name="category_id" class="form-control">
                                         <option value="">Selectează...</option>
                                         <?php foreach ($brands as $brand): ?>
-                                            <option value="<?= $brand['id'] ?>"
+                                            <option value="<?= e($brand['id']) ?>"
                                                 <?= ($product['category_id'] ?? '') == $brand['id'] ? 'selected' : '' ?>>
                                                 <?= e($brand['name']) ?>
                                             </option>
@@ -227,20 +226,13 @@ $products = $stmt->fetchAll();
                                     <select id="subcategory_id" name="subcategory_id" class="form-control">
                                         <option value="">Selectează...</option>
                                         <?php foreach ($types as $type): ?>
-                                            <option value="<?= $type['id'] ?>"
+                                            <option value="<?= e($type['id']) ?>"
                                                 <?= ($product['subcategory_id'] ?? '') == $type['id'] ? 'selected' : '' ?>>
                                                 <?= e($type['name']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="short_description">Scurtă Descriere</label>
-                                <input type="text" id="short_description" name="short_description" class="form-control"
-                                       value="<?= e($product['short_description'] ?? '') ?>"
-                                       placeholder="Max 500 caractere, apare în listă">
                             </div>
 
                             <div class="form-group">
@@ -345,7 +337,7 @@ $products = $stmt->fetchAll();
                                                        class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                                                     <a href="../pages/product.php?slug=<?= e($prod['slug']) ?>"
                                                        class="btn btn-sm btn-outline" target="_blank"><i class="fas fa-eye"></i></a>
-                                                    <button onclick="deleteProduct(<?= $prod['id'] ?>)"
+                                                    <button onclick="deleteProduct(<?= intval($prod['id']) ?>)"
                                                             class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
