@@ -408,3 +408,4 @@ document.addEventListener('DOMContentLoaded', function() {
     updateButtons(); // Initial check
 });
 </script>
+?>
