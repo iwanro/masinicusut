@@ -89,15 +89,21 @@ define('ALLOWED_IMAGE_TYPES', ['image/jpeg', 'image/png', 'image/webp']);
 // Start Session
 // =====================================================
 if (session_status() === PHP_SESSION_NONE) {
-    // Force session save path to /tmp (cPanel fix)
-    ini_set('session.save_path', '/tmp');
+    // Try to start session with error suppression
+    @ini_set('session.save_path', '/tmp');
 
-    ini_set('session.cookie_httponly', 1);
-    ini_set('session.use_only_cookies', 1);
-    ini_set('session.cookie_samesite', 'Lax');
-    ini_set('session.cookie_secure', 1);
-    session_name(SESSION_NAME);
-    session_start();
+    // Create tmp directory if it doesn't exist
+    if (!is_dir('/tmp')) {
+        @mkdir('/tmp', 0777, true);
+    }
+
+    // Try session_start, suppress errors
+    @session_name(SESSION_NAME);
+
+    if (!@session_start()) {
+        // Session failed - continue without session
+        error_log("Warning: session_start() failed - continuing without session");
+    }
 }
 
 // Load database
