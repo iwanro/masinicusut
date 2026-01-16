@@ -73,8 +73,12 @@ include SITE_ROOT . '/includes/header.php';
 <section class="brands-section">
     <div class="container">
         <h2 class="section-title">Mărci Populare</h2>
-        <div class="brands-scroll-container">
-            <div class="brands-scroll-wrapper">
+        <div class="brands-carousel-container">
+            <button class="carousel-btn carousel-prev" onclick="scrollBrands(-1)" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="brands-carousel" id="brands-carousel">
                 <?php foreach ($brands as $brand): ?>
                     <a href="/pages/catalog.php?brand=<?= $brand['slug'] ?>" class="brand-card">
                         <div class="brand-card-inner">
@@ -87,6 +91,10 @@ include SITE_ROOT . '/includes/header.php';
                     </a>
                 <?php endforeach; ?>
             </div>
+            
+            <button class="carousel-btn carousel-next" onclick="scrollBrands(1)" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 </section>
@@ -243,6 +251,73 @@ $additionalCss = '<style>
     padding: 60px 0;
 }
 
+/* Brands Carousel */
+.brands-carousel-container {
+    position: relative;
+    padding: 0 60px;
+}
+
+.brands-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 10px 0;
+}
+
+.brands-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.brand-card {
+    flex: 0 0 200px;
+    min-width: 200px;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 2px solid var(--border-light);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-md);
+}
+
+.carousel-btn:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-prev {
+    left: 0;
+}
+
+.carousel-next {
+    right: 0;
+}
+
+.carousel-btn i {
+    font-size: 1.125rem;
+}
+
 @media (max-width: 768px) {
     .hero-content h1 {
         font-size: 32px;
@@ -256,8 +331,57 @@ $additionalCss = '<style>
         flex-direction: column;
     }
 
-    .brands-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .brands-carousel-container {
+        padding: 0 50px;
+    }
+    
+    .carousel-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .brand-card {
+        flex: 0 0 160px;
+        min-width: 160px;
     }
 }
 </style>';
+
+<script>
+// Brands Carousel Navigation
+function scrollBrands(direction) {
+    const carousel = document.getElementById('brands-carousel');
+    if (!carousel) return;
+    
+    const scrollAmount = 240; // Width of card + gap
+    carousel.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+// Optional: Auto-hide buttons at scroll edges
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('brands-carousel');
+    if (!carousel) return;
+    
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    
+    function updateButtons() {
+        if (!prevBtn || !nextBtn) return;
+        
+        const isAtStart = carousel.scrollLeft <= 0;
+        const isAtEnd = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 10;
+        
+        prevBtn.style.opacity = isAtStart ? '0.3' : '1';
+        prevBtn.style.pointerEvents = isAtStart ? 'none' : 'auto';
+        
+        nextBtn.style.opacity = isAtEnd ? '0.3' : '1';
+        nextBtn.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+    }
+    
+    carousel.addEventListener('scroll', updateButtons);
+    updateButtons(); // Initial check
+});
+</script>

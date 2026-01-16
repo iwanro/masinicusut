@@ -137,13 +137,13 @@
                     <!-- Header Actions -->
                     <div class="header-actions">
                         <!-- Contact -->
-                        <a href="tel:<?= e(getSetting('contact_phone', '0766221688')) ?>" class="action-item">
+                        <a href="tel:0766221688" class="action-item action-phone">
                             <div class="action-icon">
                                 <i class="fas fa-phone-alt"></i>
                             </div>
                             <div class="action-text">
                                 <span class="action-label">Sună-ne</span>
-                                <span class="action-value"><?= e(getSetting('contact_phone', '0766221688')) ?></span>
+                                <span class="action-value">0766 221 688</span>
                             </div>
                         </a>
 

@@ -461,6 +461,17 @@ button {
     font-weight: 700;
 }
 
+/* Phone Action - Make visible */
+.action-phone .action-value {
+    color: var(--accent-color);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.action-phone:hover .action-value {
+    color: var(--accent-hover);
+}
+
 /* Navigation */
 .main-navigation {
     background: var(--bg-primary);
