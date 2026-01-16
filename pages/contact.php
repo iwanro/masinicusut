@@ -70,10 +70,19 @@ include SITE_ROOT . '/includes/header.php';
                 </div>
 
                 <div class="contact-item">
+                    <i class="fas fa-file-contract"></i>
+                    <div>
+                        <strong>Date Firma:</strong>
+                        <p>Reg. Com.: J16/1268/25.05.2022</p>
+                        <p>CUI: 46190930</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
                     <i class="fas fa-phone"></i>
                     <div>
                         <strong>Telefon:</strong>
-                        <p><?= e(getSetting('contact_phone', '+40 700 000 000')) ?></p>
+                        <p><?= e(getSetting('contact_phone', '0766221688')) ?></p>
                     </div>
                 </div>
 
@@ -112,7 +121,7 @@ $additionalCss = '<style>
 
 .contact-form-section h2,
 .contact-info-section h2 {
-    font-size: 24px;
+    font-size: 20px; /* Reduced from 24px */
     margin-bottom: 25px;
 }
 

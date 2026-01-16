@@ -252,7 +252,7 @@ $additionalCss = '<style>
 }
 
 .catalog-header h1 {
-    font-size: 32px;
+    font-size: 24px; /* Reduced from 32px */
     margin-bottom: 10px;
 }
 

@@ -38,6 +38,7 @@ include SITE_ROOT . '/includes/header.php';
     <div class="auth-page">
         <div class="auth-card">
             <h1>Autentificare</h1>
+            <p class="subtitle">Bine ai revenit!</p>
 
             <form method="POST">
                 <?= getCsrfField() ?>
@@ -69,26 +70,35 @@ include SITE_ROOT . '/includes/footer.php';
 
 $additionalCss = '<style>
 .auth-page {
-    max-width: 500px;
-    margin: 60px auto;
+    max-width: 480px;
+    margin: 80px auto;
 }
 
 .auth-card {
-    background-color: var(--bg-white);
-    padding: 40px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    background: var(--bg-primary);
+    padding: 48px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
 }
 
 .auth-card h1 {
+    font-size: 1.75rem;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
 }
 
 .auth-footer {
     text-align: center;
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-light);
 }
 </style>';

@@ -249,7 +249,7 @@ $additionalCss = '<style>
 }
 
 .product-info-detail h1 {
-    font-size: 32px;
+    font-size: 24px; /* Reduced from 32px */
     margin-bottom: 15px;
 }
 
@@ -260,7 +260,7 @@ $additionalCss = '<style>
 }
 
 .product-price-large {
-    font-size: 36px;
+    font-size: 28px; /* Reduced from 36px */
     font-weight: 700;
     color: var(--secondary-color);
     margin-bottom: 20px;

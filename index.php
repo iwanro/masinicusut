@@ -25,15 +25,38 @@ $brands = getBrands();
 include SITE_ROOT . '/includes/header.php';
 ?>
 
-<!-- Hero Section -->
+<!-- Enhanced Hero Section -->
 <section class="hero-section">
+    <div class="hero-background"></div>
     <div class="container">
         <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-star"></i>
+                <span>Calitate Premium</span>
+            </div>
             <h1>Piese și Accesorii pentru Mașini de Cusut</h1>
-            <p>Găsește tot ce ai nevoie pentru mașina ta de cusut - piese originale, accesorii și consumabile</p>
+            <p class="hero-subtitle">Găsește tot ce ai nevoie pentru mașina ta de cusut - piese originale, accesorii și consumabile</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <strong>500+</strong>
+                    <span>Produse</span>
+                </div>
+                <div class="stat-item">
+                    <strong>50+</strong>
+                    <span>Mărci</span>
+                </div>
+                <div class="stat-item">
+                    <strong>24h</strong>
+                    <span>Livrare</span>
+                </div>
+            </div>
             <div class="hero-buttons">
-                <a href="/pages/catalog.php" class="btn btn-primary btn-lg">Vezi Catalog</a>
-                <a href="/pages/contact.php" class="btn btn-outline btn-lg">Contact</a>
+                <a href="/pages/catalog.php" class="btn btn-primary btn-lg">
+                    <i class="fas fa-shopping-bag"></i> Vezi Catalog
+                </a>
+                <a href="/pages/contact.php" class="btn btn-outline btn-lg">
+                    <i class="fas fa-headset"></i> Contact
+                </a>
             </div>
         </div>
     </div>
@@ -130,21 +153,68 @@ include SITE_ROOT . '/includes/footer.php';
 // Add homepage specific styles
 $additionalCss = '<style>
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    position: relative;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 50%, var(--accent-color) 100%);
     color: #fff;
-    padding: 80px 0;
-    text-align: center;
+    padding: 60px 0;
+    overflow: hidden;
 }
 
-.hero-content h1 {
-    font-size: 48px;
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(15, 23, 42, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
     margin-bottom: 20px;
 }
 
-.hero-content p {
-    font-size: 20px;
+.hero-content h1 {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+.hero-subtitle {
+    font-size: 16px;
     margin-bottom: 30px;
     opacity: 0.9;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent-color);
+}
+
+.stat-item span {
+    font-size: 0.875rem;
+    opacity: 0.8;
 }
 
 .hero-buttons {

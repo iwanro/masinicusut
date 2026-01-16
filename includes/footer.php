@@ -15,6 +15,10 @@
                     <h3>Despre Noi</h3>
                     <p><?= e(getSetting('site_description', 'Piese, accesorii și consumabile pentru mașini de cusut')) ?></p>
                     <p><strong>SUNDARI TOP STAR S.R.L.</strong></p>
+                    <div class="legal-info">
+                        <p><strong>Reg. Com.:</strong> J16/1268/25.05.2022</p>
+                        <p><strong>CUI:</strong> 46190930</p>
+                    </div>
                 </div>
 
                 <!-- Link-uri rapide -->
@@ -47,7 +51,7 @@
                 <div class="footer-col">
                     <h3>Contact</h3>
                     <ul class="contact-info">
-                        <li><i class="fas fa-phone"></i> <?= e(getSetting('contact_phone', '')) ?></li>
+                        <li><i class="fas fa-phone"></i> <?= e(getSetting('contact_phone', '0766221688')) ?></li>
                         <li><i class="fas fa-envelope"></i> <?= e(getSetting('contact_email', '')) ?></li>
                         <li><i class="fas fa-map-marker-alt"></i> România</li>
                     </ul>
@@ -60,7 +64,12 @@
 
             <!-- Copyright -->
             <div class="footer-bottom">
-                <p>&copy; <?= date('Y') ?> <?= e(getSetting('site_name', SITE_NAME)) ?>. Toate drepturile rezervate.</p>
+                <div class="footer-bottom-content">
+                    <p>&copy; <?= date('Y') ?> <?= e(getSetting('site_name', SITE_NAME)) ?>. Toate drepturile rezervate.</p>
+                    <p class="footer-credit">
+                        Created by: <a href="https://iwan.ro" target="_blank" rel="noopener">IWAN</a>
+                    </p>
+                </div>
             </div>
         </div>
     </footer>
