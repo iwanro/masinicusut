@@ -286,3 +286,22 @@ function getOffset($page, $perPage) {
 function getTotalPages($total, $perPage) {
     return ceil($total / $perPage);
 }
+
+/**
+ * Curăță intrările vechi din coș (sesiuni expirate)
+ * @param int $daysOld Numărul de zile după care se consideră expirat (default 30)
+ * @return int Numărul de intrări șterse
+ */
+function cleanupOldCartEntries($daysOld = 30) {
+    $db = db();
+
+    $stmt = $db->prepare("
+        DELETE FROM cart
+        WHERE user_id IS NULL
+        AND session_id IS NOT NULL
+        AND updated_at < DATE_SUB(NOW(), INTERVAL ? DAY)
+    ");
+
+    $stmt->execute([$daysOld]);
+    return $stmt->rowCount();
+}

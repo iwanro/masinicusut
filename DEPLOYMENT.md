@@ -225,6 +225,58 @@ Verifică periodic:
 2. Verifică console browser pentru erori JavaScript
 3. Verifică dacă `/api/shipping.php` e accesibil
 
+## 🛒 Sistem Coș de Cumpărături
+
+Sistemul de coș a fost îmbunătățit cu următoarele caracteristici:
+
+### Migrare Automată la Autentificare
+- Când un utilizator se autentifică, produsele adăugate în coș ca vizitator sunt transferate automat în contul său
+- Nu se pierd produsele din coș când te autentifici
+
+### Curățare Automată a Coșurilor Vechi
+- Coșurile utilizatorilor neautentificați (sesiuni) sunt șterse automat după 30 de zile
+- Script de curățare: `cleanup_cart.php`
+- Pentru rulare manuală: `php cleanup_cart.php`
+- Pentru cron job (recomandat să ruleze o dată pe zi):
+
+```bash
+0 2 * * * php /calea/catre/proiect/cleanup_cart.php
+```
+
+### Schema Îmbunătățită a Bazei de Date
+- Verificare ca fiecare intrare în coș să aibă fie `user_id` fie `session_id`
+- Indexuri optimizate pentru performanță
+- Trigger-e de validare (opțional)
+
+Pentru a aplica îmbunătățirile schemei, rulează în phpMyAdmin:
+```sql
+-- Aplică fix-urile de bază pentru coș
+source sql/fix_cart_simple.sql
+
+-- SAU pentru migrare completă
+source sql/improve_cart_schema.sql
+```
+
+### Verificare și Debug
+- Script de verificare: `verify_fixes.php` - verifică dacă coșul funcționează corect
+- Debug coș: `debug_cart.php` (acces limitat recomandat)
+- Log erori coș: `logs/cart_debug.log`
+
+### Probleme Comune și Rezolvare
+
+#### Coșul se golește după autentificare
+- Verifică dacă `session_id` column permite NULL (`ALTER TABLE cart MODIFY COLUMN session_id VARCHAR(128) DEFAULT NULL`)
+- Verifică dacă funcția `migrateCartToUser` este apelată în `includes/auth.php`
+
+#### Produsele nu se adaugă în coș
+- Verifică dacă tabela `cart` are constrângerea unică corectă
+- Verifică logs pentru erori PHP sau SQL
+- Verifică dacă sesiunile funcționează (cookie-uri activate)
+
+#### Coșul nu se salvează între sesiuni
+- Asigură-te că `session.cookie_lifetime` este setat corect în `config/config.php`
+- Verifică dacă browser-ul acceptă cookie-uri
+
 ## 📞 Suport
 
 Pentru probleme specifice Hostico:

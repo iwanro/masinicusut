@@ -50,6 +50,53 @@ function getCurrentUser() {
 }
 
 /**
+ * Migrează coșul de la session_id la user_id la autentificare
+ * @param string $sessionId
+ * @param int $userId
+ * @return int Numărul de produse migrate
+ */
+function migrateCartToUser($sessionId, $userId) {
+    $db = db();
+
+    // Obține toate produsele din coșul sesiunii
+    $stmt = $db->prepare("SELECT product_id, quantity FROM cart WHERE session_id = ? AND (user_id IS NULL OR user_id = 0)");
+    $stmt->execute([$sessionId]);
+    $sessionCart = $stmt->fetchAll();
+
+    if (empty($sessionCart)) {
+        return 0;
+    }
+
+    $migrated = 0;
+
+    foreach ($sessionCart as $item) {
+        // Verifică dacă produsul există deja în coșul utilizatorului
+        $checkStmt = $db->prepare("SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?");
+        $checkStmt->execute([$userId, $item['product_id']]);
+        $existing = $checkStmt->fetch();
+
+        if ($existing) {
+            // Actualizează cantitatea
+            $newQuantity = $existing['quantity'] + $item['quantity'];
+            $updateStmt = $db->prepare("UPDATE cart SET quantity = ? WHERE id = ?");
+            $updateStmt->execute([$newQuantity, $existing['id']]);
+        } else {
+            // Adaugă produsul în coșul utilizatorului
+            $insertStmt = $db->prepare("INSERT INTO cart (user_id, session_id, product_id, quantity) VALUES (?, NULL, ?, ?)");
+            $insertStmt->execute([$userId, $item['product_id'], $item['quantity']]);
+        }
+
+        $migrated++;
+    }
+
+    // Șterge intrările vechi din sesiune
+    $deleteStmt = $db->prepare("DELETE FROM cart WHERE session_id = ? AND (user_id IS NULL OR user_id = 0)");
+    $deleteStmt->execute([$sessionId]);
+
+    return $migrated;
+}
+
+/**
  * Login utilizator
  * @param string $email
  * @param string $password
@@ -75,6 +122,10 @@ function login($email, $password) {
     $_SESSION['email'] = $user['email'];
     $_SESSION['name'] = $user['name'];
     $_SESSION['role'] = $user['role'];
+
+    // Migrează coșul de la sesiunea curentă la utilizator
+    $oldSessionId = session_id();
+    migrateCartToUser($oldSessionId, $user['id']);
 
     // Regenerează session ID pentru security
     session_regenerate_id(true);
