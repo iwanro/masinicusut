@@ -1,126 +1,182 @@
 <?php
 /**
- * Database Connection - PDO with MySQLi Fallback
+ * Database Connection - MySQLi (PDO Compatible)
  * SUNDARI TOP STAR S.R.L.
  */
 
 // Prevent direct access
 defined('SITE_ROOT') OR exit('Direct access not allowed');
 
-// Check if PDO extension is available
-if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
-    // PDO not available - show helpful error message
-    die('<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eroare Server - PDO Necesar</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #f5f5f5;
+class PDOStatement_MySQLi {
+    private $stmt;
+    private $result;
+    private $params = [];
+
+    public function __construct($mysqli_stmt) {
+        $this->stmt = $mysqli_stmt;
+    }
+
+    public function execute($params = null) {
+        if ($params) {
+            $this->params = $params;
+            $types = str_repeat('s', count($params));
+            $this->stmt->bind_param($types, ...$this->bindReferences($params));
         }
-        .error-container {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        return $this->stmt->execute();
+    }
+
+    private function bindReferences($params) {
+        $refs = [];
+        foreach ($params as $k => $v) {
+            $refs[$k] = &$params[$k];
         }
-        h1 {
-            color: #e74c3c;
-            margin-bottom: 20px;
+        return $refs;
+    }
+
+    public function fetch($style = null) {
+        $this->result = $this->stmt->get_result();
+        if ($this->result) {
+            $row = $this->result->fetch_assoc();
+            if ($style === PDO::FETCH_OBJ && $row) {
+                return (object)$row;
+            }
+            return $row;
         }
-        .error-message {
-            background: #fee;
-            border-left: 4px solid #e74c3c;
-            padding: 15px;
-            margin: 20px 0;
+        return null;
+    }
+
+    public function fetchAll($style = null) {
+        $this->result = $this->stmt->get_result();
+        if ($this->result) {
+            $rows = $this->result->fetch_all(MYSQLI_ASSOC);
+            if ($style === PDO::FETCH_OBJ && $rows) {
+                return array_map(function($row) {
+                    return (object)$row;
+                }, $rows);
+            }
+            return $rows ?: [];
         }
-        .instructions {
-            background: #e8f4f8;
-            border-left: 4px solid #3498db;
-            padding: 15px;
-            margin: 20px 0;
+        return [];
+    }
+
+    public function fetchColumn($column = 0) {
+        $this->result = $this->stmt->get_result();
+        if ($this->result) {
+            $row = $this->result->fetch_array();
+            return $row[$column] ?? null;
         }
-        .instructions h3 {
-            margin-top: 0;
-            color: #2980b9;
+        return null;
+    }
+
+    public function rowCount() {
+        return $this->stmt->affected_rows;
+    }
+
+    public function closeCursor() {
+        if ($this->result) {
+            $this->result->free();
         }
-        .instructions ol {
-            margin: 10px 0;
+        $this->stmt->reset();
+        return true;
+    }
+}
+
+class PDO_MySQLi {
+    private $mysqli;
+
+    public function __construct($dsn, $username, $password, $options = []) {
+        // Parse DSN: mysql:host=...;dbname=...
+        preg_match('/host=([^;]+)/', $dsn, $host_match);
+        preg_match('/dbname=([^;]+)/', $dsn, $db_match);
+
+        $host = $host_match[1] ?? 'localhost';
+        $dbname = $db_match[1] ?? '';
+
+        $this->mysqli = new mysqli($host, $username, $password, $dbname);
+
+        if ($this->mysqli->connect_error) {
+            throw new Exception("Connection failed: " . $this->mysqli->connect_error);
         }
-        .instructions li {
-            margin: 5px 0;
+
+        $this->mysqli->set_charset("utf8mb4");
+    }
+
+    public function prepare($query) {
+        $stmt = $this->mysqli->prepare($query);
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->mysqli->error);
         }
-        code {
-            background: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: "Courier New", monospace;
+        return new PDOStatement_MySQLi($stmt);
+    }
+
+    public function query($query) {
+        $result = $this->mysqli->query($query);
+        if (!$result) {
+            throw new Exception("Query failed: " . $this->mysqli->error);
         }
-        .contact {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
+
+        if ($result instanceof mysqli_result) {
+            $rows = [];
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+            $result->free();
+            return $rows;
         }
-    </style>
-</head>
-<body>
-    <div class="error-container">
-        <h1>Eroare Configurare Server</h1>
-        <div class="error-message">
-            <strong>Problema:</strong> Extensia PDO nu este încărcată pe server.<br>
-            Aceasta este necesară pentru conectarea la baza de date.
-        </div>
-        <div class="instructions">
-            <h3>Soluții - Alegeți una:</h3>
-            <ol>
-                <li>
-                    <strong>Activați PDO în cPanel:</strong>
-                    <ul>
-                        <li>Accesați cPanel → Select PHP Version</li>
-                        <li>Căutați și bifați <code>pdo</code> și <code>pdo_mysql</code></li>
-                        <li>Salvați și restartuiți PHP</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Activați PDO în php.ini:</strong>
-                    <ul>
-                        <li>Adăugați aceste linii în php.ini:</li>
-                        <li><code>extension=pdo</code></li>
-                        <li><code>extension=pdo_mysql</code></li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Contactați suportul hosting:</strong>
-                    <ul>
-                        <li>Cereți activarea extensiilor PDO și PDO_MySQL</li>
-                        <li>Menționați că folosiți PHP ' . PHP_VERSION . '</li>
-                    </ul>
-                </li>
-            </ol>
-        </div>
-        <div class="instructions">
-            <h3>Informații Tehnice:</h3>
-            <ul>
-                <li><strong>Versiune PHP:</strong> ' . PHP_VERSION . '</li>
-                <li><strong>Server:</strong> ' . $_SERVER['SERVER_SOFTWARE'] . '</li>
-                <li><strong>Extensii încărcate:</strong> ' . implode(', ', get_loaded_extensions()) . '</li>
-            </ul>
-        </div>
-        <div class="contact">
-            <p><strong>Aveți nevoie de ajutor?</strong></p>
-            <p>Contactați administratorul site-ului: <a href="mailto:' . ADMIN_EMAIL . '">' . ADMIN_EMAIL . '</a></p>
-        </div>
-    </div>
-</body>
-</html>');
+
+        return true;
+    }
+
+    public function exec($query) {
+        $this->mysqli->query($query);
+        return $this->mysqli->affected_rows;
+    }
+
+    public function lastInsertId($name = null) {
+        return $this->mysqli->insert_id;
+    }
+
+    public function quote($string) {
+        return "'" . $this->mysqli->real_escape_string($string) . "'";
+    }
+
+    public function beginTransaction() {
+        return $this->mysqli->begin_transaction();
+    }
+
+    public function commit() {
+        return $this->mysqli->commit();
+    }
+
+    public function rollBack() {
+        return $this->mysqli->rollback();
+    }
+
+    public function errorInfo() {
+        return [
+            0 => $this->mysqli->sqlstate,
+            1 => $this->mysqli->errno,
+            2 => $this->mysqli->error
+        ];
+    }
+}
+
+// Define PDO constants
+if (!class_exists('PDO')) {
+    class Constants {}
+    class_alias('Constants', 'PDO');
+
+    class PDO {
+        const ATTR_ERRMODE = 1;
+        const ERRMODE_EXCEPTION = 2;
+        const ATTR_DEFAULT_FETCH_MODE = 3;
+        const FETCH_ASSOC = 4;
+        const FETCH_OBJ = 5;
+        const ATTR_EMULATE_PREPARES = 6;
+    }
+
+    // Create alias
+    class_alias('PDO_MySQLi', 'PDO');
 }
 
 class Database {
@@ -130,20 +186,13 @@ class Database {
     private function __construct() {
         try {
             $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-            $options = [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false
-            ];
 
-            $this->pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+            // Use MySQLi wrapper
+            $this->pdo = new PDO_MySQLi($dsn, DB_USER, DB_PASS);
 
-            // Set charset manually after connection (compatible with PHP 8+)
-            $this->pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
-        } catch (PDOException $e) {
-            // Log error și afișează mesaj generic
+        } catch (Exception $e) {
             error_log("Database connection error: " . $e->getMessage());
-            die("Eroare conectare la baza de date. Vă rugăm încercați mai târziu.");
+            die("<!DOCTYPE html><html><head><title>Eroare Database</title><style>body{font-family:Arial,sans-serif;max-width:600px;margin:50px auto;padding:20px;background:#fee}</style></head><body><h1>❌ Eroare Conexiune</h1><p>Eroare: " . htmlspecialchars($e->getMessage()) . "</p><p>Contactează administratorul!</p></body></html>");
         }
     }
 
@@ -158,16 +207,13 @@ class Database {
         return $this->pdo;
     }
 
-    // Previne clonarea
     private function __clone() {}
 
-    // Previne unserializarea
     public function __wakeup() {
         throw new Exception("Cannot unserialize singleton");
     }
 }
 
-// Funcție helper pentru a obține conexiunea rapid
 if (!function_exists('db')) {
     function db() {
         return Database::getInstance()->getConnection();
