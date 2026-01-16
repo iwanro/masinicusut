@@ -100,29 +100,6 @@ include SITE_ROOT . '/includes/header.php';
 </section>
 <?php endif; ?>
 
-<script>
-function scrollBrands(direction) {
-    const container = document.querySelector('.brands-carousel');
-    const scrollAmount = 250; // px per click
-
-    if (container) {
-        if (direction < 0) {
-            // Previous
-            container.scrollBy({
-                left: -scrollAmount,
-                behavior: 'smooth'
-            });
-        } else {
-            // Next
-            container.scrollBy({
-                left: scrollAmount,
-                behavior: 'smooth'
-            });
-        }
-    }
-}
-</script>
-
 <!-- Featured Products -->
 <?php if (!empty($featuredProducts)): ?>
 <section class="featured-section">

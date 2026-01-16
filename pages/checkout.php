@@ -324,7 +324,9 @@ function updateShippingCost() {
                 document.getElementById('total-display').textContent = total.toFixed(2) + ' RON';
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            // Silently handle shipping cost error
+        });
 }
 
 // Also update when city changes (optional)

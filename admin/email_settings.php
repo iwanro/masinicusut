@@ -19,13 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'smtp_host' => trim($_POST['smtp_host'] ?? ''),
         'smtp_port' => intval($_POST['smtp_port'] ?? 587),
         'smtp_username' => trim($_POST['smtp_username'] ?? ''),
-        'smtp_password' => trim($_POST['smtp_password'] ?? ''),
         'smtp_encryption' => trim($_POST['smtp_encryption'] ?? 'tls'),
         'admin_email' => trim($_POST['admin_email'] ?? ''),
         'email_from_name' => trim($_POST['email_from_name'] ?? ''),
         'email_from_address' => trim($_POST['email_from_address'] ?? ''),
         'email_orders_enabled' => isset($_POST['email_orders_enabled']) ? '1' : '0'
     ];
+
+    // Only update password if a new one is provided
+    $newPassword = trim($_POST['smtp_password'] ?? '');
+    if (!empty($newPassword)) {
+        $settings['smtp_password'] = $newPassword;
+    }
 
     foreach ($settings as $key => $value) {
         setSetting($key, $value);
@@ -163,7 +168,7 @@ $emailSettings = [
                             <div class="form-group">
                                 <label for="smtp_password">Parolă SMTP</label>
                                 <input type="password" id="smtp_password" name="smtp_password" class="form-control"
-                                       value="<?= e($emailSettings['smtp_password']) ?>">
+                                       placeholder="Lăsă gol pentru a păstra parola curentă">
                                 <small>Lăsă gol pentru a păstra parola curentă</small>
                             </div>
                         </div>

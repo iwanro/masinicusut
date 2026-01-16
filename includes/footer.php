@@ -101,7 +101,9 @@
                     document.getElementById('cart-count').textContent = data.count;
                 }
             })
-            .catch(err => console.error('Cart count error:', err));
+            .catch(err => {
+                // Silently handle cart count error
+            });
     </script>
 </body>
 </html>

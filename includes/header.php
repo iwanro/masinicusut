@@ -39,7 +39,7 @@
     <meta name="twitter:image" content="<?= getOGImage($ogImage ?? null) ?>">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?= URL_ASSETS ?>/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="<?= URL_ASSETS ?>/favicon.svg">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -168,7 +168,24 @@
             <div class="container">
                 <div class="nav-wrapper">
                     <ul class="nav-menu">
-                        <!-- Navigation links removed as requested -->
+                        <li class="nav-item">
+                            <a href="/index.php" class="nav-link <?= isActivePage('index.php') ? 'active' : '' ?>">
+                                <i class="fas fa-home"></i>
+                                <span>Acasă</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/pages/catalog.php" class="nav-link <?= isActivePage('catalog.php') || isActivePage('product.php') ? 'active' : '' ?>">
+                                <i class="fas fa-th-large"></i>
+                                <span>Catalog Produse</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/pages/contact.php" class="nav-link <?= isActivePage('contact.php') ? 'active' : '' ?>">
+                                <i class="fas fa-envelope"></i>
+                                <span>Contact</span>
+                            </a>
+                        </li>
                     </ul>
 
                     <!-- Mobile Menu Toggle -->

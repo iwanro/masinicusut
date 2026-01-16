@@ -2,6 +2,11 @@
 config/config.local.php
 config/database.local.php
 
+# Environment variables
+.env
+.env.local
+.env.production
+
 # Logs
 logs/
 *.log

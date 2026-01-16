@@ -10,11 +10,25 @@ define('SITE_ROOT', realpath(dirname(__FILE__) . '/..'));
 // =====================================================
 // Database Configuration
 // =====================================================
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'fovyarnx_cusut');
-define('DB_USER', 'fovyarnx_usercusut');
-define('DB_PASS', 'SiteSundari22!');
-define('DB_CHARSET', 'utf8mb4');
+// Load environment variables from .env file if it exists
+$envFile = SITE_ROOT . '/.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) {
+            continue; // Skip comments
+        }
+        list($name, $value) = explode('=', $line, 2);
+        $_ENV[trim($name)] = trim($value);
+    }
+}
+
+// Define database constants - prioritize environment variables, fall back to hardcoded values
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'fovyarnx_cusut');
+define('DB_USER', getenv('DB_USER') ?: 'fovyarnx_usercusut');
+define('DB_PASS', getenv('DB_PASS') ?: 'SiteSundari22!');
+define('DB_CHARSET', getenv('DB_CHARSET') ?: 'utf8mb4');
 
 // =====================================================
 // Site Configuration

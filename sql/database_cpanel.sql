@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS products (
     category_id INT,
     brand_id INT,
     is_active TINYINT(1) DEFAULT 1,
-    featured TINYINT(1) DEFAULT 0,
+    is_featured TINYINT(1) DEFAULT 0 COMMENT 'Featured product for homepage',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
@@ -200,7 +200,7 @@ INSERT INTO categories (name, slug, description, parent_id, type, sort_order) VA
 ('Cleme', 'cleme', 'Cleme și fixări', 1, 'product_type', 5);
 
 -- Produse exemplu
-INSERT INTO products (name, slug, description, price, sku, stock, category_id, brand_id, is_active, featured) VALUES
+INSERT INTO products (name, slug, description, price, sku, stock, category_id, brand_id, is_active, is_featured) VALUES
 ('Ace Singer 130/705H - Set 5 buc', 'ace-singer-130705h-set-5-buc',
 'Ace universale Singer 130/705H, potrivite pentru majoritatea modelelor. Set 5 bucăți.', 25.00, 'SNG-NEEDLE-001', 50, 7, 1, 1, 1),
 
@@ -217,7 +217,7 @@ INSERT INTO products (name, slug, description, price, sku, stock, category_id, b
 'Set complet cleme pentru fixarea plăcii de cusut la modelele Singer. Include șuruburi.', 30.00, 'SNG-CLAMP-SET', 40, 11, 1, 1, 0);
 
 -- Produse pentru alte branduri
-INSERT INTO products (name, slug, description, price, sku, stock, category_id, brand_id, is_active, featured) VALUES
+INSERT INTO products (name, slug, description, price, sku, stock, category_id, brand_id, is_active, is_featured) VALUES
 ('Ace Pfaff 130/705H - Calitate Premium', 'ace-pfaff-130705h-calitate-premium',
 'Ace Pfaff 130/705H, calitate premium, potrivite pentru toate modelele Pfaff domestice.', 30.00, 'PF-NEEDLE-001', 45, 7, 2, 1, 1),
 

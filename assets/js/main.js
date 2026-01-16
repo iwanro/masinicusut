@@ -239,7 +239,7 @@ function updateCartDisplay() {
             }
         })
         .catch(error => {
-            console.error('Error updating cart:', error);
+            // Error silently handled
         });
 }
 
@@ -266,17 +266,12 @@ function addToCart(productId, quantity = 1) {
         body: formData
     })
     .then(response => {
-        // Log raw response
-        console.log('Cart API Response Status:', response.status);
-
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
-        console.log('Cart API Response Data:', data);
-
         if (data.success) {
             updateCartDisplay();
             showNotification('success', data.message || 'Produs adăugat în coș!');
@@ -285,7 +280,6 @@ function addToCart(productId, quantity = 1) {
         }
     })
     .catch(error => {
-        console.error('Cart Error Details:', error);
         showNotification('error', 'Eroare: ' + error.message);
 
         // Log to server for debugging
@@ -297,7 +291,9 @@ function addToCart(productId, quantity = 1) {
                 productId: productId,
                 stack: error.stack
             })
-        }).catch(err => console.error('Failed to log error:', err));
+        }).catch(err => {
+            // Silently handle logging failure
+        });
     })
     .finally(() => {
         // Reset buttons
@@ -348,7 +344,6 @@ function updateCartItem(itemId, quantity) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         showNotification('error', 'Eroare la comunicare cu serverul.');
     });
 }
@@ -380,7 +375,6 @@ function removeFromCart(itemId) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         showNotification('error', 'Eroare la comunicare cu serverul.');
     });
 }
@@ -412,7 +406,6 @@ function deleteProduct(productId) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         showNotification('error', 'Eroare la comunicare cu serverul.');
     });
 }
@@ -450,7 +443,6 @@ function deleteCategory(categoryId, productsCount) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         showNotification('error', 'Eroare la comunicare cu serverul.');
     });
 }
@@ -482,7 +474,6 @@ function deleteRate(rateId) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         showNotification('error', 'Eroare la comunicare cu serverul.');
     });
 }
