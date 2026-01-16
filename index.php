@@ -73,12 +73,20 @@ include SITE_ROOT . '/includes/header.php';
 <section class="brands-section">
     <div class="container">
         <h2 class="section-title">Mărci Populare</h2>
-        <div class="brands-grid">
-            <?php foreach ($brands as $brand): ?>
-                <a href="/pages/catalog.php?brand=<?= $brand['slug'] ?>" class="brand-card">
-                    <?= e($brand['name']) ?>
-                </a>
-            <?php endforeach; ?>
+        <div class="brands-scroll-container">
+            <div class="brands-scroll-wrapper">
+                <?php foreach ($brands as $brand): ?>
+                    <a href="/pages/catalog.php?brand=<?= $brand['slug'] ?>" class="brand-card">
+                        <div class="brand-card-inner">
+                            <div class="brand-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <h3 class="brand-name"><?= e($brand['name']) ?></h3>
+                            <div class="brand-overlay"></div>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 </section>
@@ -229,7 +237,6 @@ $additionalCss = '<style>
     justify-content: center;
 }
 
-.brands-section,
 .featured-section {
     padding: 60px 0;
 }
