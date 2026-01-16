@@ -161,22 +161,18 @@ class PDO_MySQLi {
     }
 }
 
-// Define PDO constants
-if (!class_exists('PDO')) {
-    class Constants {}
-    class_alias('Constants', 'PDO');
-
-    class PDO {
-        const ATTR_ERRMODE = 1;
-        const ERRMODE_EXCEPTION = 2;
-        const ATTR_DEFAULT_FETCH_MODE = 3;
-        const FETCH_ASSOC = 4;
-        const FETCH_OBJ = 5;
-        const ATTR_EMULATE_PREPARES = 6;
+// Define PDO constants if using MySQLi
+if (!extension_loaded('pdo')) {
+    if (!class_exists('PDO')) {
+        class PDO {
+            const ATTR_ERRMODE = 1;
+            const ERRMODE_EXCEPTION = 2;
+            const ATTR_DEFAULT_FETCH_MODE = 3;
+            const FETCH_ASSOC = 4;
+            const FETCH_OBJ = 5;
+            const ATTR_EMULATE_PREPARES = 6;
+        }
     }
-
-    // Create alias
-    class_alias('PDO_MySQLi', 'PDO');
 }
 
 class Database {
@@ -187,8 +183,18 @@ class Database {
         try {
             $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
 
-            // Use MySQLi wrapper
-            $this->pdo = new PDO_MySQLi($dsn, DB_USER, DB_PASS);
+            // Try PDO first, fallback to MySQLi wrapper
+            if (class_exists('PDO') && extension_loaded('pdo')) {
+                $this->pdo = new \PDO($dsn, DB_USER, DB_PASS, [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                    \PDO::ATTR_EMULATE_PREPARES => false
+                ]);
+                $this->pdo->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+            } else {
+                // Use MySQLi wrapper
+                $this->pdo = new PDO_MySQLi($dsn, DB_USER, DB_PASS);
+            }
 
         } catch (Exception $e) {
             error_log("Database connection error: " . $e->getMessage());
