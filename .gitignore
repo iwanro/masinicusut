@@ -44,6 +44,7 @@ data/
 
 # Backup-uri
 *.bak
+*.backup
 backup/
 
 # PHPUnit
