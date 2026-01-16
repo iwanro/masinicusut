@@ -1,0 +1,103 @@
+<?php
+/**
+ * Global Configuration
+ * SUNDARI TOP STAR S.R.L.
+ */
+
+// Define SITE_ROOT
+define('SITE_ROOT', realpath(dirname(__FILE__) . '/..'));
+
+// =====================================================
+// Database Configuration
+// =====================================================
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'piese_masini_cusut');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_CHARSET', 'utf8mb4');
+
+// =====================================================
+// Site Configuration
+// =====================================================
+define('SITE_NAME', 'SUNDARI TOP STAR');
+define('SITE_URL', 'http://localhost');
+define('ADMIN_EMAIL', 'admin@sundari.ro');
+
+// =====================================================
+// Paths
+// =====================================================
+define('PATH_CONFIG', SITE_ROOT . '/config');
+define('PATH_INCLUDES', SITE_ROOT . '/includes');
+define('PATH_ASSETS', SITE_ROOT . '/assets');
+define('PATH_PAGES', SITE_ROOT . '/pages');
+define('PATH_ADMIN', SITE_ROOT . '/admin');
+define('PATH_API', SITE_ROOT . '/api');
+define('PATH_UPLOADS', SITE_ROOT . '/assets/images/products');
+
+// =====================================================
+// URLs
+// =====================================================
+define('URL_ASSETS', SITE_URL . '/assets');
+define('URL_CSS', URL_ASSETS . '/css');
+define('URL_JS', URL_ASSETS . '/js');
+define('URL_IMAGES', URL_ASSETS . '/images');
+define('URL_PRODUCTS', URL_IMAGES . '/products');
+
+// =====================================================
+// Session Configuration
+// =====================================================
+define('SESSION_NAME', 'SUNDARI_SESSION');
+define('SESSION_LIFETIME', 86400); // 24 hours
+
+// =====================================================
+// Security
+// =====================================================
+define('CSRF_TOKEN_NAME', 'csrf_token');
+define('PASSWORD_MIN_LENGTH', 6);
+
+// =====================================================
+// Pagination
+// =====================================================
+define('PRODUCTS_PER_PAGE', 12);
+define('ADMIN_ITEMS_PER_PAGE', 20);
+
+// =====================================================
+// File Upload
+// =====================================================
+define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
+define('ALLOWED_IMAGE_TYPES', ['image/jpeg', 'image/png', 'image/webp']);
+
+// =====================================================
+// Start Session
+// =====================================================
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_samesite', 'Strict');
+    session_name(SESSION_NAME);
+    session_start();
+}
+
+// Load database
+// For local testing with SQLite, uncomment the next line:
+// require_once PATH_CONFIG . '/database_sqlite.php';
+
+// For production with MySQL, use this:
+require_once PATH_CONFIG . '/database.php';
+
+// Load functions
+require_once PATH_INCLUDES . '/functions.php';
+
+// Load auth
+require_once PATH_INCLUDES . '/auth.php';
+
+// =====================================================
+// Error Reporting (Development)
+// =====================================================
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// =====================================================
+// Timezone
+// =====================================================
+date_default_timezone_set('Europe/Bucharest');
